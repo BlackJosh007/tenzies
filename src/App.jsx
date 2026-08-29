@@ -2,9 +2,12 @@ import Die from "./component/Die.jsx"
 import "./App.css"
 import { use, useState, useRef } from "react"
 import { nanoid, random } from 'nanoid'
+/* import { useWindowSize } from 'react-use' */
+import Confetti from 'react-confetti'
+
 
 export default function App() {
-    const [diceNo, setDiceNo] = useState(generateAllNewDice())
+    const [diceNo, setDiceNo] = useState(generateAllNewDice)
     const rollButtonRef = useRef(null)
 
     /*  let count = 0;
@@ -24,11 +27,6 @@ export default function App() {
         console.log("Game won!")
     }
 
-    if (gameWon) {
-        console.log("Game won!")
-        rollButtonRef.current.textContent = "New Game"
-    }
-
 
 
     function generateAllNewDice() {
@@ -45,7 +43,7 @@ export default function App() {
     /* generateAllNewDice() */
 
     function rollDice() {
-        setDiceNo(prevDice => prevDice.map(
+        rollButtonRef.current.innerText === "New Game" ? setDiceNo(generateAllNewDice) : setDiceNo(prevDice => prevDice.map(
             dice => dice.isHeld == false ?
                 { ...dice, value: Math.floor(Math.random() * 6) + 1 }
                 : dice
@@ -64,6 +62,7 @@ export default function App() {
 
     return (
         <main>
+            {gameWon && <Confetti />}
             <h1 className="title">Tenzies</h1>
             <p className="instructions">Roll until all dice are the same. Click each die to freeze it at its current value between rolls.</p>
             <div className="dice-container">
@@ -75,7 +74,7 @@ export default function App() {
                     uniqueKey={diceObj.id} />)}
             </div>
 
-            <button onClick={rollDice} className="roll-dice" ref={rollButtonRef}>Roll</button>
+            <button onClick={rollDice} className="roll-dice" ref={rollButtonRef}>{gameWon ? "New Game" : "Roll"}</button>
         </main>
     )
 } 
