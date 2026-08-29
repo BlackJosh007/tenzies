@@ -1,6 +1,6 @@
 import Die from "./component/Die.jsx"
 import "./App.css"
-import { use, useState, useRef } from "react"
+import { use, useState, useRef, useEffect } from "react"
 import { nanoid, random } from 'nanoid'
 /* import { useWindowSize } from 'react-use' */
 import Confetti from 'react-confetti'
@@ -25,7 +25,12 @@ export default function App() {
     ) {
         gameWon = true;
         console.log("Game won!")
+
     }
+
+    useEffect(() => {
+        gameWon ? rollButtonRef.current.focus() : null
+    }, [gameWon])
 
 
 
@@ -63,6 +68,9 @@ export default function App() {
     return (
         <main>
             {gameWon && <Confetti />}
+            <div aria-live="polite" className="sr-only">
+                {gameWon && <p>Congratulations! you won! Press "New Game"</p>}
+            </div>
             <h1 className="title">Tenzies</h1>
             <p className="instructions">Roll until all dice are the same. Click each die to freeze it at its current value between rolls.</p>
             <div className="dice-container">

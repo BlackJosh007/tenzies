@@ -6,7 +6,11 @@ export default function Die({ value, isHeld, holdFunc, uniqueKey }) {
     return (
         <button style={style}
             className="dice-btn"
-            onClick={holdFunc}>{value}
+            onClick={holdFunc}
+            aria-pressed={isHeld}
+            aria-label={`Die with value ${value}, ${isHeld ? 'held' : 'not held'}`}
+        >
+            {value}
         </button>
     )
 }
