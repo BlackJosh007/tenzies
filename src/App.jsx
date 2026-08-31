@@ -10,6 +10,11 @@ export default function App() {
     const [diceNo, setDiceNo] = useState(generateAllNewDice)
     const rollButtonRef = useRef(null)
 
+
+
+
+
+
     /*  let count = 0;
      for (let i = 0; i < diceNo.length - 1; i++) {
  
@@ -65,6 +70,50 @@ export default function App() {
         )
     }
 
+    /* useEffect(() => {
+        diceNo.some(die => die.isHeld) ? intervalRef.current = setInterval(() => {
+            setSeconds(prevSev => prevSev + 1)
+            console.log('running')
+        }, 1000) : null
+
+        if (gameWon) { clearInterval(timerDiv.current) }
+
+        return () => clearInterval(timerDiv.current);
+    },
+        [diceNo.some(die => die.isHeld), gameWon]) */
+
+    const [seconds, setSeconds] = useState(0)
+
+    const intervalRef = useRef(null)
+    const timerStarted = useRef(false)
+
+    useEffect(() => {
+        //Effect
+        const hasHeld = diceNo.some(die => die.isHeld)
+
+        //Check if the timer hasn't started and if any dice has been held.. This is the condition to start the timer, so the timer will start only after a dice is held, and it we won't have multiple timer because the timer must not have started...
+
+        if (hasHeld && !timerStarted.current) {
+            timerStarted.current = true
+
+            intervalRef.current = setInterval(() => {
+                setSeconds(prevSec => prevSec + 1)
+            }, 1000)
+        }
+    }, [diceNo])
+
+    //SecondEffect
+    useEffect(() => {
+        if (gameWon && timerStarted.current) {
+            clearInterval(intervalRef.current)
+
+            //Also reset our refs
+            timerStarted.current = false
+            intervalRef.current = null
+        }
+    }, [gameWon])
+
+
     return (
         <main>
             {gameWon && <Confetti />}
@@ -82,6 +131,7 @@ export default function App() {
                     uniqueKey={diceObj.id} />)}
             </div>
 
+            <div className="timer" ><h2>{seconds}</h2></div>
             <button onClick={rollDice} className="roll-dice" ref={rollButtonRef}>{gameWon ? "New Game" : "Roll"}</button>
         </main>
     )
