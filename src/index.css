@@ -28,12 +28,14 @@ main {
   background-color: #F5F5F5;
   height: 100%;
   width: 100%;
-  border-radius: 5px;
+  border-radius: 10px;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: space-between;
   align-items: center;
-  padding: 1rem;
+  padding: 2rem 1.5rem;
+  position: relative;
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.15);
 }
 
 .title {
@@ -42,7 +44,7 @@ main {
 }
 
 .instructions {
-  font-family: 'Inter', sans-sarif;
+  font-family: 'Inter', sans-serif;
   font-weight: 400;
   margin-top: 0;
   text-align: center;
@@ -51,7 +53,7 @@ main {
 .dice-container {
   display: grid;
   grid-template: auto auto / repeat(5, 1fr);
-  gap: 20px;
+  gap: 15px;
   margin-bottom: 40px;
 }
 
@@ -74,6 +76,9 @@ main {
   flex-direction: column;
   justify-content: center;
   align-self: center;
+
+  position: absolute;
+  bottom: -1.5rem;
 }
 
 .sr-only {

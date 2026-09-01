@@ -10,19 +10,6 @@ export default function App() {
     const [diceNo, setDiceNo] = useState(generateAllNewDice)
     const rollButtonRef = useRef(null)
 
-
-
-
-
-
-    /*  let count = 0;
-     for (let i = 0; i < diceNo.length - 1; i++) {
- 
-         if (diceNo[i].isHeld && (diceNo[i].value == diceNo[i + 1].value)) {
-             count += 1;
-             if (count === diceNo.length - 1) console.log("you won")
-         }
-     } */
     let gameWon = false;
     if (
         diceNo.every(die => die.isHeld) &&
@@ -53,11 +40,17 @@ export default function App() {
     /* generateAllNewDice() */
 
     function rollDice() {
-        rollButtonRef.current.innerText === "New Game" ? setDiceNo(generateAllNewDice) : setDiceNo(prevDice => prevDice.map(
-            dice => dice.isHeld == false ?
-                { ...dice, value: Math.floor(Math.random() * 6) + 1 }
-                : dice
-        ))
+        if (rollButtonRef.current.innerText === "New Game") {
+            setDiceNo(generateAllNewDice)
+            setSeconds(() => 0)
+        }
+        else {
+            setDiceNo(prevDice => prevDice.map(
+                dice => dice.isHeld == false ?
+                    { ...dice, value: Math.floor(Math.random() * 6) + 1 }
+                    : dice
+            ))
+        }
     }
 
 
@@ -70,17 +63,6 @@ export default function App() {
         )
     }
 
-    /* useEffect(() => {
-        diceNo.some(die => die.isHeld) ? intervalRef.current = setInterval(() => {
-            setSeconds(prevSev => prevSev + 1)
-            console.log('running')
-        }, 1000) : null
-
-        if (gameWon) { clearInterval(timerDiv.current) }
-
-        return () => clearInterval(timerDiv.current);
-    },
-        [diceNo.some(die => die.isHeld), gameWon]) */
 
     const [seconds, setSeconds] = useState(0)
 
@@ -131,7 +113,10 @@ export default function App() {
                     uniqueKey={diceObj.id} />)}
             </div>
 
-            <div className="timer" ><h2>{seconds}</h2></div>
+            <div className="timer">
+                <h2>{seconds}</h2>
+                <p>Roll_Count:{seconds}</p>
+            </div>
             <button onClick={rollDice} className="roll-dice" ref={rollButtonRef}>{gameWon ? "New Game" : "Roll"}</button>
         </main>
     )
