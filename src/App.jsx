@@ -39,10 +39,16 @@ export default function App() {
     }
     /* generateAllNewDice() */
 
+
+    //Initiate my roll-countRef
+    const roll_count = useRef(0)
+
     function rollDice() {
         if (rollButtonRef.current.innerText === "New Game") {
             setDiceNo(generateAllNewDice)
             setSeconds(() => 0)
+
+            roll_count.current = 0
         }
         else {
             setDiceNo(prevDice => prevDice.map(
@@ -50,7 +56,11 @@ export default function App() {
                     { ...dice, value: Math.floor(Math.random() * 6) + 1 }
                     : dice
             ))
+
+            roll_count.current = roll_count.current + 1
         }
+
+
     }
 
 
@@ -64,7 +74,7 @@ export default function App() {
     }
 
 
-    const [seconds, setSeconds] = useState(0)
+    const [milliSeconds, setMilliSeconds] = useState(0)
 
     const intervalRef = useRef(null)
     const timerStarted = useRef(false)
@@ -79,8 +89,8 @@ export default function App() {
             timerStarted.current = true
 
             intervalRef.current = setInterval(() => {
-                setSeconds(prevSec => prevSec + 1)
-            }, 1000)
+                setMilliSeconds(prevSec => prevSec + 10)
+            }, 10)
         }
     }, [diceNo])
 
@@ -95,6 +105,16 @@ export default function App() {
         }
     }, [gameWon])
 
+    const minutes = Math.floor(milliSeconds / 60000);
+    const seconds = Math.floor((milliSeconds % 60000) / 1000);
+    const milliseconds = Math.floor((milliSeconds % 1000) / 10);
+
+    // Format with leading zeros
+    const formattedTime = [
+        String(minutes).padStart(2, '0'),
+        String(seconds).padStart(2, '0'),
+        String(milliseconds).padStart(2, '0')
+    ].join(':');
 
     return (
         <main>
@@ -114,8 +134,8 @@ export default function App() {
             </div>
 
             <div className="timer">
-                <h2>{seconds}</h2>
-                <p>Roll_Count:{seconds}</p>
+                <h2>{formattedTime}</h2>
+                <p>Roll_Count:{roll_count.current}</p>
             </div>
             <button onClick={rollDice} className="roll-dice" ref={rollButtonRef}>{gameWon ? "New Game" : "Roll"}</button>
         </main>
