@@ -2,7 +2,7 @@ import Die from "./component/Die.jsx"
 import "./App.css"
 import { use, useState, useRef, useEffect } from "react"
 import { nanoid, random } from 'nanoid'
-/* import { useWindowSize } from 'react-use' */
+import { useWindowSize } from 'react-use'
 import Confetti from 'react-confetti'
 import { RotateCcw } from 'lucide-react';
 
@@ -21,7 +21,6 @@ export default function App() {
 
     }
 
-    /* const currentTime = useRef(null); */
     const [bestTimeState, setBestTime] = useState(Infinity)
     const [bestRoll, setBestRoll] = useState(Infinity)
 
@@ -34,8 +33,6 @@ export default function App() {
                 setBestTime(milliSeconds)
                 setBestRoll(roll_count.current)
             }
-
-            /* highScoreCheck() */
 
         }
     }, [gameWon])
@@ -58,19 +55,8 @@ export default function App() {
                 id: nanoid()
             }
         ))
-        /* console.log(randomArray[0]) */
         return randomArray
     }
-    /* generateAllNewDice() */
-
-
-    //Initiate my roll-countRef
-
-
-    /*  useEffect(() => {
- 
- 
-     }, [restartTrack]) */
 
     function rollDice() {
         setDiceNo(prevDice => prevDice.map(
@@ -158,17 +144,16 @@ export default function App() {
     }
 
 
-
+    const { width, height } = useWindowSize()
     return (
         <main>
-            {gameWon && <Confetti />}
+            {gameWon && <Confetti width={width}
+                height={height} />}
 
             <div className={`highscores-panel ${menu ? "open" : ""}`}>
                 <h3>🏆 Personal Best (Top 2)</h3>
 
                 <div className="scores-list">
-                    {/* You will map over your high score array state here */}
-                    {/* Example of a single row structure: */}
                     <div className="score-row">
                         <span className="rank">#1</span>
                         <span className="score-time">⏱️ {bestFormattedTime}</span>
