@@ -4,6 +4,7 @@ import { use, useState, useRef, useEffect } from "react"
 import { nanoid, random } from 'nanoid'
 /* import { useWindowSize } from 'react-use' */
 import Confetti from 'react-confetti'
+import { RotateCcw } from 'lucide-react';
 
 
 export default function App() {
@@ -20,10 +21,33 @@ export default function App() {
 
     }
 
+    /* const currentTime = useRef(null); */
+    const [bestTimeState, setBestTime] = useState(Infinity)
+    const [bestRoll, setBestRoll] = useState(Infinity)
+
+
     useEffect(() => {
         gameWon ? rollButtonRef.current.focus() : null
-    }, [gameWon])
 
+        if (gameWon) {
+            if (milliSeconds < bestTimeState) {
+                setBestTime(milliSeconds)
+                setBestRoll(roll_count.current)
+            }
+
+            /* highScoreCheck() */
+
+        }
+    }, [gameWon])
+    const bestMinutes = Math.floor(bestTimeState / 60000);
+    const bestSeconds = Math.floor((bestTimeState % 60000) / 1000);
+    const bestMilliseconds = Math.floor((bestTimeState % 1000) / 10);
+
+    const bestFormattedTime = [
+        String(bestMinutes).padStart(2, '0'),
+        String(bestSeconds).padStart(2, '0'),
+        String(bestMilliseconds).padStart(2, '0')
+    ].join(':');
 
 
     function generateAllNewDice() {
@@ -41,26 +65,21 @@ export default function App() {
 
 
     //Initiate my roll-countRef
-    const roll_count = useRef(0)
+
+
+    /*  useEffect(() => {
+ 
+ 
+     }, [restartTrack]) */
 
     function rollDice() {
-        if (rollButtonRef.current.innerText === "New Game") {
-            setDiceNo(generateAllNewDice)
-            setSeconds(() => 0)
+        setDiceNo(prevDice => prevDice.map(
+            dice => dice.isHeld == false ?
+                { ...dice, value: Math.floor(Math.random() * 6) + 1 }
+                : dice
+        ))
 
-            roll_count.current = 0
-        }
-        else {
-            setDiceNo(prevDice => prevDice.map(
-                dice => dice.isHeld == false ?
-                    { ...dice, value: Math.floor(Math.random() * 6) + 1 }
-                    : dice
-            ))
-
-            roll_count.current = roll_count.current + 1
-        }
-
-
+        roll_count.current = roll_count.current + 1
     }
 
 
@@ -105,6 +124,22 @@ export default function App() {
         }
     }, [gameWon])
 
+    const roll_count = useRef(0)
+
+    function newGame() {
+        setDiceNo(generateAllNewDice)
+        roll_count.current = 0
+
+        console.log('Render')
+
+        clearInterval(intervalRef.current)
+        setMilliSeconds(() => 0)
+
+        //Also reset our refs
+        timerStarted.current = false
+        intervalRef.current = null
+    }
+
     const minutes = Math.floor(milliSeconds / 60000);
     const seconds = Math.floor((milliSeconds % 60000) / 1000);
     const milliseconds = Math.floor((milliSeconds % 1000) / 10);
@@ -116,9 +151,37 @@ export default function App() {
         String(milliseconds).padStart(2, '0')
     ].join(':');
 
+    const [menu, SetMenu] = useState(false)
+
+    function menuToggle() {
+        SetMenu(prevVal => !prevVal)
+    }
+
+
+
     return (
         <main>
             {gameWon && <Confetti />}
+
+            <div className={`highscores-panel ${menu ? "open" : ""}`}>
+                <h3>🏆 Personal Best (Top 2)</h3>
+
+                <div className="scores-list">
+                    {/* You will map over your high score array state here */}
+                    {/* Example of a single row structure: */}
+                    <div className="score-row">
+                        <span className="rank">#1</span>
+                        <span className="score-time">⏱️ {bestFormattedTime}</span>
+                        <span className="score-rolls">🎲 {bestRoll} rolls</span>
+                    </div>
+
+                </div>
+
+
+                <button className="close-btn" onClick={menuToggle}>Close</button>
+            </div>
+
+
             <div aria-live="polite" className="sr-only">
                 {gameWon && <p>Congratulations! you won! Press "New Game"</p>}
             </div>
@@ -133,11 +196,28 @@ export default function App() {
                     uniqueKey={diceObj.id} />)}
             </div>
 
-            <div className="timer">
-                <h2>{formattedTime}</h2>
-                <p>Roll_Count:{roll_count.current}</p>
+
+            <div className="game-controls-wrapper">
+
+                {/* Your updated timer layout */}
+                <div className="timer">
+                    <h2>{formattedTime}</h2>
+                    <p>Roll_Count:{roll_count.current}</p>
+
+
+                    <div className="action-buttons-group">
+                        <button className="restart-btn" aria-label="Restart game" onClick={newGame}>
+                            <RotateCcw size={22} color='currentColor' strokeWidth={2} />
+                        </button>
+
+                        <button className="leaderboard-toggle-btn" aria-label="Open high scores" onClick={menuToggle}>
+                            🏆
+                        </button>
+                    </div>
+                </div>
+
             </div>
-            <button onClick={rollDice} className="roll-dice" ref={rollButtonRef}>{gameWon ? "New Game" : "Roll"}</button>
+            <button onClick={gameWon ? newGame : rollDice} className="roll-dice" ref={rollButtonRef}>{gameWon ? "New Game" : "Roll"}</button>
         </main>
     )
 } 

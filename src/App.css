@@ -1,6 +1,6 @@
 .timer {
     display: flex;
-    gap: 20px;
+    gap: 10px;
     flex-direction: column;
     /* flex-direction: column; */
     justify-content: space-around;
@@ -16,8 +16,9 @@
     color: #5035FF;
     font-family: 'Orbitron', sans-serif;
     margin: 0;
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     letter-spacing: 1px;
+    line-height: 1;
 }
 
 .timer p {
@@ -25,6 +26,153 @@
     color: #4A4A68;
     margin: 0;
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     text-transform: uppercase;
+}
+
+.action-buttons-group {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+/* .restart-btn {
+    width: 45px;
+    height: 45px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+    border: 1px solid #D5D5FA;
+    border-radius: 50%;
+
+    background-color: white;
+    color: #5035FF;
+
+    cursor: pointer;
+} */
+
+.restart-btn,
+.leaderboard-toggle-btn {
+    background-color: #FFFFFF;
+    border: 1px solid #D5D5FA;
+    color: #5035FF;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    transition: all 0.2s ease;
+}
+
+.restart-btn:hover,
+.leaderboard-toggle-btn:hover {
+    background-color: #5035FF;
+    color: #F5F5F5;
+    border-color: #5035FF;
+}
+
+.highscores-panel {
+    position: absolute;
+    top: -100%;
+    left: 0;
+    width: 100%;
+    height: auto;
+    background: rgba(245, 245, 245, 0.98);
+    border-bottom: 3px solid #5035FF;
+    border-radius: 5px 5px 0 0;
+    padding: 20px;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.15);
+    transition: top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* .restart-btn:hover {
+    color: #3820e8;
+    transform: rotate(-45deg);
+}
+
+.restart-btn:active {
+    transform: rotate(-45deg) scale(0.95);
+} */
+
+.game-controls-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 320px;
+    background-color: #EBEBFA;
+    padding: 10px 16px;
+    border-radius: 10px;
+    margin-bottom: 25px;
+    border: 1px solid #D5D5FA;
+}
+
+.highscores-panel.open {
+    top: 0;
+}
+
+.highscores-panel h3 {
+    margin: 0 0 15px 0;
+    font-family: 'Inter', sans-serif;
+    color: #0B2434;
+    font-size: 1.2rem;
+}
+
+.scores-list {
+    width: 100%;
+    max-width: 280px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.score-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #EBEBFA;
+    padding: 10px 15px;
+    border-radius: 6px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #4A4A68;
+}
+
+.score-row .rank,
+.score-row .score-time {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 600;
+}
+
+.score-row .rank {
+    color: #5035FF;
+}
+
+.close-btn {
+    background: transparent;
+    border: none;
+    color: #888;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    cursor: pointer;
+    padding: 5px 10px;
+    transition: color 0.2s;
+}
+
+.close-btn:hover {
+    color: #FF3555;
 }
